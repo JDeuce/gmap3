@@ -1505,6 +1505,9 @@
         }
       });
       
+
+      var dirty_clusters = false;
+
       clusterer.events(
         google.maps.event.addListener(
           map, 
@@ -1517,7 +1520,17 @@
           map, 
           'bounds_changed',
           function() {
-            clusterer.redraw();
+            dirty_clusters = true;
+          }
+        ),
+        google.maps.event.addListener(
+          map,
+          'idle',
+          function() {
+            if (dirty_clusters) {
+                dirty_clusters = false;
+                clusterer.redraw();
+            }
           }
         )
       );
